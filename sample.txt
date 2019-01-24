@@ -1,0 +1,6 @@
+int x;
+
+double f()
+{
+  return ++x;
+}
