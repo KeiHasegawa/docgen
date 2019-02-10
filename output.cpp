@@ -1,8 +1,11 @@
 #include "stdafx.h"
-
+#ifdef CXX_GENERATOR
+#include "cxx_core.h"
+#define COMPILER cxx_compiler
+#else // CXX_GENERATOR
 #include "c_core.h"
-
 #define COMPILER c_compiler
+#endif // CXX_GENERATOR
 
 #include "docgen.h"
 
@@ -146,6 +149,21 @@ namespace docgen {
     for (auto p : m)
       output_p(p);
   }
+  inline bool is_top(const COMPILER::scope* ptr)
+  {
+    using namespace COMPILER;
+#ifndef CXX_GENERATOR
+    return !ptr->m_parent;
+#else // CXX_GENERATOR
+    if ( !ptr->m_parent )
+      return true;
+    if ( ptr->m_id == scope::TAG )
+      return is_top(ptr->m_parent);
+    if ( ptr->m_id == scope::NAMESPACE )
+      return is_top(ptr->m_parent);
+    return false;
+#endif // CXX_GENERATOR
+  }
   inline void output_v(var* v, const file_t& file)
   {
     if (is_external_declaration(v)) {
@@ -173,11 +191,16 @@ namespace docgen {
     typedef const record_type REC;
     REC* rec = static_cast<REC*>(T);
     tag* t = rec->get_tag();
-    if (t->m_scope->m_parent)
+#ifdef CXX_GENERATOR
+    if (!is_top(t))
       return;
-	string name = t->m_name;
-	if (name[0] == '.')
-	  return;
+#else // CXX_GENERATOR 
+    if (!is_top(t->m_scope))
+      return;
+#endif // CXX_GENERATOR
+    string name = t->m_name;
+    if (name[0] == '.')
+      return;
     output_h("    $ref $tag", name, file);
     out << ';' << '\n';
   }

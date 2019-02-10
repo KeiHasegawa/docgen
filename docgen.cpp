@@ -1,8 +1,12 @@
 #include "stdafx.h"
 
+#ifdef CXX_GENERATOR
+#include "cxx_core.h"
+#define COMPILER cxx_compiler
+#else // CXX_GENERATOR
 #include "c_core.h"
-
 #define COMPILER c_compiler
+#endif // CXX_GENERATOR
 
 #include "docgen.h"
 
