@@ -28,4 +28,4 @@ RM = rm -r -f
 
 clean:
 	$(RM) $(DOCGEN_DLL) $(OBJS) *~
-	$(RM) .vs Debug Release x64
+	$(RM) .vs Debug Release x64 DebugCXX ReleaseCXX
