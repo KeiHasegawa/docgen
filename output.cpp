@@ -136,8 +136,8 @@ namespace docgen {
       return;
     done_t.insert(t);
     string name = t->m_name;
-	if (name[0] == '.')
-	  return;
+    if (name[0] == '.')
+      return;
     const vector<file_t>& v = t->m_file;
     assert(!v.empty());
     const file_t& file = v.back();
